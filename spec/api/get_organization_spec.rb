@@ -45,7 +45,7 @@ describe 'GET /organizations/:id' do
       expect(json.keys).to eq %w(id accreditations alternate_name
                                  date_incorporated description email
                                  funding_sources licenses name website
-                                 slug url contacts phones)
+                                 slug url location contacts phones)
     end
   end
 
