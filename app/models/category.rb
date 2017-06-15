@@ -13,4 +13,11 @@ class Category < ActiveRecord::Base
             }
 
   has_ancestry
+
+  class << self
+    def _parents
+      where(parent_id: nil)
+    end
+  end
+
 end
