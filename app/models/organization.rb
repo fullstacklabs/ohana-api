@@ -9,6 +9,8 @@ class Organization < ActiveRecord::Base
   has_one :location, dependent: :destroy
   has_many :programs, dependent: :destroy
   has_many :contacts, dependent: :destroy
+  has_many :services, through: :location
+  has_many :categories, through: :services
 
   has_many :phones, dependent: :destroy
   accepts_nested_attributes_for :phones,
