@@ -3,12 +3,16 @@ class ServiceSerializer < ActiveModel::Serializer
              :eligibility, :email, :fees, :funding_sources, :application_process,
              :interpretation_services, :keywords, :languages, :name,
              :required_documents, :service_areas, :status, :website,
-             :wait_time, :updated_at
+             :wait_time, :updated_at, :categories
 
   # embed :ids, include: true
-  has_many :categories
   has_many :contacts
   has_many :phones
   has_many :regular_schedules
   has_many :holiday_schedules
+
+  def categories
+    ActiveModel::ArraySerializer.new(self.object.categories.roots.order(:id), each_serializer: CategorySerializer).as_json
+  end
+
 end

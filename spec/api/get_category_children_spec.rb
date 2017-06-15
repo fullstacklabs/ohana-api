@@ -35,10 +35,6 @@ describe 'GET /categories/:category_id/children' do
     it 'includes the name attribute in the serialization' do
       expect(json.first['name']).to eq(@food_child.name)
     end
-
-    it 'includes the parent_id attribute in the serialization' do
-      expect(json.first['parent_id']).to eq(@food_child.parent_id)
-    end
   end
 
   context "when category doesn't have children" do

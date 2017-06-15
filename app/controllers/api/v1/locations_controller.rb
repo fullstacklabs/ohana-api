@@ -20,7 +20,7 @@ module Api
       def show
         location = Location.includes(
           contacts: :phones,
-          services: [:categories, :contacts, :phones, :regular_schedules,
+          services: [:contacts, :phones, :regular_schedules,
                      :holiday_schedules]
         ).find(params[:id])
         render json: location, status: 200 if stale?(location, public: true)

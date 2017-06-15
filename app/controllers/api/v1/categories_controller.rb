@@ -2,7 +2,7 @@ module Api
   module V1
     class CategoriesController < ApplicationController
       def index
-        categories = Category.all
+        categories = Category.roots.order(:id)
         render json: categories, status: 200
       end
 

@@ -296,31 +296,36 @@ describe 'GET /locations/:id' do
           'depth' => 0,
           'taxonomy_id' => '101',
           'name' => 'Food',
-          'parent_id' => nil
-        },
-        {
-          'id' => @food_child.id,
-          'depth' => 1,
-          'taxonomy_id' => '101-01',
-          'name' => 'Community Gardens',
-          'parent_id' => @food.id
+          'parent_id' => nil,
+          'children' => [
+            {
+              'id' => @food_child.id,
+              'depth' => 1,
+              'taxonomy_id' => '101-01',
+              'name' => 'Community Gardens',
+              'parent_id' => @food.id,
+              'children' => []
+            }
+          ]
         },
         {
           'id' => @health.id,
           'depth' => 0,
           'taxonomy_id' => '102',
           'name' => 'Health',
-          'parent_id' => nil
-        },
-        {
-          'id' => @health_child.id,
-          'depth' => 1,
-          'taxonomy_id' => '102-01',
-          'name' => 'Orthodontics',
-          'parent_id' => @health.id
+          'parent_id' => nil,
+          'children' => [
+            {
+              'id' => @health_child.id,
+              'depth' => 1,
+              'taxonomy_id' => '102-01',
+              'name' => 'Orthodontics',
+              'parent_id' => @health.id,
+              'children' => []
+            }
+          ]
         }
-      ]
-
+      ]      
       expect(json['services'].first['categories']).to eq(categories)
     end
   end

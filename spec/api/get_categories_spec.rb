@@ -26,8 +26,8 @@ describe 'GET /categories' do
     expect(json.first['id']).to eq(@food.id)
   end
 
-  it 'includes the depth attribute in the serialization' do
-    expect(json.first['depth']).to eq(@food.depth)
+  it 'includes the children attribute in the serialization' do
+    expect(json.first['children']).to eq(@food.children)
   end
 
   it 'includes the taxonomy_id attribute in the serialization' do
@@ -36,9 +36,5 @@ describe 'GET /categories' do
 
   it 'includes the name attribute in the serialization' do
     expect(json.first['name']).to eq(@food.name)
-  end
-
-  it 'includes the parent_id attribute in the serialization' do
-    expect(json.first['parent_id']).to eq(@food.parent_id)
   end
 end
