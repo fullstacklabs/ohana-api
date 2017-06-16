@@ -2,7 +2,7 @@ module Api
   module V1
     class CategoriesController < ApplicationController
       def index
-        categories = Category.roots.order(:id).ransack(params[:filters]).result
+        categories = Category.roots.order(:id).ransack(params[:filters]).result 
         render json: categories, status: 200
       end
 
