@@ -6,11 +6,25 @@ module Api
       include CustomErrors
 
       def index
-        orgs = Organization.includes(:contacts, :phones, :location, :categories).
+        per_page = params[:per_page] || 10
+        orgs = Organization.includes(:contacts, :phones, :location).
                  ransack(params[:filters]).
                  result.uniq.
-               page(params[:page]).per(params[:per_page])
-        render json: orgs, status: 200
+               page(params[:page]).per(per_page)
+
+        render json: {
+          organizations: ActiveModel::ArraySerializer.new(orgs, each_serializer: OrganizationSerializer),\
+          metadata: {
+            pagination: {
+              per_page: per_page,
+              total_pages: orgs.total_pages,
+              prev_page: orgs.prev_page,
+              current_page: orgs.current_page,
+              next_page: orgs.next_page,
+            },
+            total_organizations: orgs.total_count
+          }
+        }, status: 200
         generate_pagination_headers(orgs)
       end
 

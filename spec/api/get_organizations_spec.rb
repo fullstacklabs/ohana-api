@@ -5,7 +5,7 @@ describe 'GET /organizations' do
     get api_organizations_url(subdomain: ENV['API_SUBDOMAIN'])
     expect(response).to have_http_status(200)
     expect(response.content_type).to eq('application/json')
-    expect(json).to eq([])
+    expect(json['organizations']).to eq([])
   end
 
   context 'when more than one location exists' do
@@ -31,7 +31,7 @@ describe 'GET /organizations' do
 
     it 'responds to pagination parameters' do
       get api_organizations_url(page: 2, per_page: 1, subdomain: ENV['API_SUBDOMAIN'])
-      expect(json.length).to eq(1)
+      expect(json['organizations'].length).to eq(1)
     end
   end
 
@@ -51,23 +51,15 @@ describe 'GET /organizations' do
     end
 
     it 'returns the org id' do
-      expect(json.first['id']).to eq(@org.id)
+      expect(json['organizations'].first['id']).to eq(@org.id)
     end
 
     it 'returns the org name' do
-      expect(json.first['name']).to eq(@org.name)
+      expect(json['organizations'].first['name']).to eq(@org.name)
     end
 
     it 'returns the org slug' do
-      expect(json.first['slug']).to eq(@org.slug)
-    end
-
-    it 'includes the correct url attribute' do
-      org_url = json.first['url']
-
-      get org_url
-      json = JSON.parse(response.body)
-      expect(json['name']).to eq(@org.name)
+      expect(json['organizations'].first['slug']).to eq(@org.slug)
     end
 
     context 'with nil fields' do
@@ -77,7 +69,7 @@ describe 'GET /organizations' do
 
       it 'returns nil fields within Organization' do
         get api_organizations_url(subdomain: ENV['API_SUBDOMAIN'])
-        expect(json.first.keys).to include('website')
+        expect(json['organizations'].first.keys).to include('website')
       end
     end
   end
