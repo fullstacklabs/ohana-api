@@ -89,22 +89,18 @@ class Admin
     end
 
     def add_service_to_location_if_authorized
-      return unless location_ids.present?
-
-      location_ids.each do |id|
-        Location.find(id.to_i).services.create!(params[:service])
-      end
+      return unless location_id.present?
+      Location.find(location_id).services.create!(params[:service])
     end
 
-    def location_ids
+    def location_id
       return unless params[:service][:locations].present?
-      params[:service][:locations].reject do |id|
-        !location_ids_for(@service).include?(id.to_i)
-      end
+      return unless params[:service][:location] == location_id_for(@service)
+      params[:service][:location]
     end
 
-    def location_ids_for(service)
-      @ids ||= service.location.organization.locations.pluck(:id)
+    def location_id_for(service)
+      @id ||= service.location.id
     end
 
     def assign_location_service_and_taxonomy_ids
