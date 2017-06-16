@@ -6,7 +6,9 @@ module Api
       include CustomErrors
 
       def index
-        orgs = Organization.includes(:contacts, :phones, :location).
+        orgs = Organization.includes(:contacts, :phones, :location, :categories).
+                 ransack(params[:filters]).
+                 result.uniq.
                page(params[:page]).per(params[:per_page])
         render json: orgs, status: 200
         generate_pagination_headers(orgs)

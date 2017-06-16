@@ -59,6 +59,8 @@ gem 'csv_shaper'
 gem 'rubyzip'
 gem 'sucker_punch'
 
+gem 'ransack', '~> 1.8', '>= 1.8.2'
+
 group :production do
   # Heroku recommended
   gem 'rails_12factor'
