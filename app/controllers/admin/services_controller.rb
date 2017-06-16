@@ -94,7 +94,7 @@ class Admin
     end
 
     def location_id
-      return unless params[:service][:locations].present? 
+      return unless params[:service][:locations].present?
       return unless params[:service][:location] == location_id_for(@service)
       params[:service][:location]
     end
