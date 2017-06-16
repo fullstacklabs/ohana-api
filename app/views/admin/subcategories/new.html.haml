@@ -1,0 +1,5 @@
+.content-box
+  %h1 Create a new subcategory
+
+= form_for [:admin, @category, @subcategory], url: admin_category_subcategories_path(@category), html: { method: :post, class: 'edit-entry' } do |f|
+  = render 'admin/subcategories/forms/new_subcategory_form', f: f

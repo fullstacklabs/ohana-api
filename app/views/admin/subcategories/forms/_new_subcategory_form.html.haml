@@ -1,0 +1,8 @@
+= render 'admin/subcategories/forms/fields', f: f
+
+.save-box.navbar-default
+  %p
+    Creating subcategory for
+    %strong
+      = @category.name
+  = f.submit t('admin.buttons.create_subcategory'), class: 'btn btn-success', data: { disable_with: 'Please wait...' }

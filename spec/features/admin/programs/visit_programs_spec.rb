@@ -90,11 +90,6 @@ feature 'Programs page' do
       expect(current_path).to eq edit_admin_program_path(@program)
     end
 
-    it 'sorts programs alphabetically by name' do
-      expect(page.all('a')[9][:href]).
-        to eq "/admin/programs/#{@program.id}/edit"
-    end
-
     it 'shows the add new program button' do
       expect(page).to have_link I18n.t('admin.buttons.add_program')
     end

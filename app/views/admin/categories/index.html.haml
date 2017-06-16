@@ -1,0 +1,18 @@
+%p
+  Below you should see a list of categories (and their corresponding location) that you are allowed to administer.
+%p
+  To start updating, click on one of the links, which will take you to the details page
+  for the service.
+
+- if current_admin.super_admin?
+  %p
+    As a super admin, you have access to all categories in the database. Please make updates responsibly.
+
+%p
+  - @categories.each do |category|
+    %ul
+      = link_to "#{category.name}", edit_admin_category_path(category)
+  = paginate @categories
+
+  %p
+    = link_to t('admin.buttons.add_category'), new_admin_category_path, class: 'btn btn-primary'

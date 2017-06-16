@@ -1,0 +1,4 @@
+.content-box
+  %h2 #{@category.try(:name)} / #{@subcategory.try(:name)}
+= form_for [:admin, @category, @subcategory], url: admin_category_subcategory_path(@category, @subcategory), html: { class: 'edit-entry' } do |f|
+  = render 'form', f: f

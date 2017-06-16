@@ -1,0 +1,22 @@
+= render 'admin/subcategories/forms/fields', f: f
+
+.danger-zone
+  %header
+    %strong
+      Danger Zone
+  %h4
+    Delete this location
+  %p
+    Once you delete a subcategory, there is no going back. Please be certain.
+  %p
+    = link_to t('admin.buttons.delete_location'), {}, href: '', data: { toggle: 'modal', target: '#modal-window' }, class: 'boxed-action'
+.modal.fade#modal-window{ 'aria-hidden' => 'true', 'aria-labelledby' => 'myModalLabel', 'role' => 'dialog', 'tabindex' => '-1' }
+  = render 'admin/subcategories/confirm_delete_subcategory', subcategory_id: @subcategory.id, subcategory_name: @subcategory.name
+
+.save-box.navbar-default
+  %p
+    Editing
+    %strong
+      #{@category.name} / #{@subcategory.name}
+
+  = f.submit t('admin.buttons.save_changes'), class: 'btn btn-success', data: { disable_with: 'Please wait...' }

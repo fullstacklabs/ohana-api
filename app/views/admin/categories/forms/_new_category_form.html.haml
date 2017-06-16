@@ -1,0 +1,7 @@
+= render 'admin/categories/forms/fields', f: f
+= render 'admin/shared/forms/taxonomy_id', f: f
+
+.save-box.navbar-default
+  %p
+    Creating category
+  = f.submit t('admin.buttons.create_category'), class: 'btn btn-success', data: { disable_with: 'Please wait...' }

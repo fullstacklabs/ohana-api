@@ -1,0 +1,8 @@
+- if @category.errors.any?
+  .alert.alert-danger
+    %h2 #{pluralize(@category.errors.count, 'error')} prohibited this category from being saved:
+    %ul
+      - @category.errors.full_messages.each do |msg|
+        %li= msg
+
+= render 'admin/shared/forms/name', f: f

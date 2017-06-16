@@ -28,6 +28,9 @@ Rails.application.routes.draw do
       end
       resources :programs, except: :show
       resources :services, only: :index
+      resources :categories do
+        resources :subcategories, except: [:index]
+      end
 
       namespace :csv do
         get 'addresses'
@@ -81,7 +84,7 @@ Rails.application.routes.draw do
 
         resources :search, only: :index
 
-        resources :categories, only: :index
+        resources :categories, only: [:index]
 
         put 'services/:service_id/categories',
             to: 'services#update_categories', as: :service_categories

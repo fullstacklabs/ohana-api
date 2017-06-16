@@ -1,0 +1,9 @@
+- if @subcategory.errors.any?
+  .alert.alert-danger
+    %h2 #{pluralize(@subcategory.errors.count, 'error')} prohibited this service from being saved:
+    %ul
+      - @subcategory.errors.full_messages.each do |msg|
+        %li= msg
+
+= render 'admin/shared/forms/name', f: f
+= f.hidden_field :taxonomy_id, value: @subcategory.taxonomy_id

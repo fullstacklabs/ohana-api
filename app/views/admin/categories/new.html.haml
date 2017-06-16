@@ -1,0 +1,5 @@
+.content-box
+  %h1 Create a new category
+
+= form_for [:admin, @category], html: { method: :post, class: 'edit-entry' } do |f|
+  = render 'admin/categories/forms/new_category_form', f: f

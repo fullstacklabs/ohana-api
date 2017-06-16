@@ -26,13 +26,6 @@ describe 'GET /organizations/:id' do
       expect(json['slug']).to eq(@org.slug)
     end
 
-    it 'includes the correct url attribute' do
-      org_url = json['url']
-      get org_url
-      json = JSON.parse(response.body)
-      expect(json['name']).to eq(@org.name)
-    end
-
     it 'is json' do
       expect(response.content_type).to eq('application/json')
     end
@@ -45,7 +38,7 @@ describe 'GET /organizations/:id' do
       expect(json.keys).to eq %w(id accreditations alternate_name
                                  date_incorporated description email
                                  funding_sources licenses name website
-                                 slug url location contacts phones categories)
+                                 slug location contacts phones categories)
     end
   end
 

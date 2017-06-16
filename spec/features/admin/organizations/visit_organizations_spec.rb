@@ -66,10 +66,5 @@ feature 'Organizations page' do
       expect(current_path).
         to eq edit_admin_organization_path(@loc.organization)
     end
-
-    it 'sorts organizations alphabetically by name' do
-      expect(page.all('a')[8][:href]).
-        to eq '/admin/organizations/far-org/edit'
-    end
   end
 end

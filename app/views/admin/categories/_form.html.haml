@@ -1,0 +1,32 @@
+= render 'admin/categories/forms/fields', f: f
+
+.content-box
+  %h2 Sub categories
+  - if @category.children.present?
+    Click a Sub Category below to view and update it:
+    %p
+    - @category.children.each do |subcategory|
+      = link_to subcategory.name, edit_admin_category_subcategory_path(@category, subcategory)
+      %br
+  %p
+    = link_to t('admin.buttons.add_subcategory'), new_admin_category_subcategory_path(@category), class: 'btn btn-primary'
+
+.danger-zone
+  %header
+    %strong
+      Danger Zone
+  %h4
+    Delete this location
+  %p
+    Once you delete a category, there is no going back. Please be certain.
+  %p
+    = link_to t('admin.buttons.delete_location'), {}, href: '', data: { toggle: 'modal', target: '#modal-window' }, class: 'boxed-action'
+.modal.fade#modal-window{ 'aria-hidden' => 'true', 'aria-labelledby' => 'myModalLabel', 'role' => 'dialog', 'tabindex' => '-1' }
+  = render 'admin/categories/confirm_delete_category', category_id: @category.id, category_name: @category.name
+
+.save-box.navbar-default
+  %p
+    Editing
+    %strong
+      #{@category.name}
+  = f.submit t('admin.buttons.save_changes'), class: 'btn btn-success', data: { disable_with: 'Please wait...' }
