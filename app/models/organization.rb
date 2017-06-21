@@ -36,6 +36,10 @@ class Organization < ActiveRecord::Base
     joins(:location).where('locations.id = (?)', id)
   end
 
+  def self.match_exactly_categories(categories)
+    group("organizations.id").having("array_agg(categories.id) @> array[#{categories.join(',')}]")
+  end
+
   extend FriendlyId
   friendly_id :name, use: [:history]
 

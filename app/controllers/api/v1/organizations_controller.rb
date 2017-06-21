@@ -8,9 +8,13 @@ module Api
       def index
         per_page = params[:per_page] || 10
         orgs = Organization.includes(:contacts, :phones, :location).
-                 ransack(params[:filters]).
-                 result.uniq.
-               page(params[:page]).per(per_page)
+                 ransack(filter_params).
+                 result
+
+        if filter_params[:g].first[:categories_id_in].present?
+          orgs = orgs.match_exactly_categories(filter_params[:g].first[:categories_id_in])
+        end
+        orgs = orgs.uniq.page(params[:page]).per(per_page)
 
         render json: {
           organizations: ActiveModel::ArraySerializer.new(orgs, each_serializer: OrganizationSerializer),\
@@ -49,6 +53,27 @@ module Api
         org.destroy
         head 204
       end
+
+      private
+        def filter_params
+          filters = []
+          filter_options = params[:filters] || {}
+
+          categories_id_in = []
+
+          filter_options.each do |option, value|
+            if option.match(/(\w+)_id_(in|eq)/)
+              categories_id_in += value.split(",")
+            else
+              filters.push({option => value})
+            end
+          end
+          filters.push({categories_id_in: categories_id_in})
+
+          return {
+            g: filters
+          }
+        end
 
     end
   end
