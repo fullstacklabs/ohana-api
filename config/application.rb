@@ -44,13 +44,13 @@ module OhanaApi
     config.active_record.schema_format = :sql
 
     # CORS support
-    config.middleware.use Rack::Cors do
+    config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins '*'
-        resource %r{/locations|organizations|search|categories/*},
+        resource '*',
                  headers: :any,
-                 methods: %i[get put patch post delete],
-                 expose: ['Etag', 'Last-Modified', 'Link', 'X-Total-Count']
+                 methods: %i[get put patch post delete options],
+                 expose: ['Etag', 'Last-Modified', 'Link', 'X-Total-Count', 'Authorization']
       end
     end
 
@@ -64,6 +64,5 @@ module OhanaApi
     config.active_record.raise_in_transactional_callbacks = true
 
     config.active_job.queue_adapter = :sucker_punch
-
   end
 end

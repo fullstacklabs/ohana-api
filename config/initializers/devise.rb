@@ -252,4 +252,16 @@ Devise.setup do |config|
   # Rails 4+, so this setting should not be used. It is left here to allow
   # deployments to control when their existing tokens are invalidated.
   config.secret_key = ENV['DEVISE_SECRET_KEY']
+
+  config.jwt do |jwt|
+    jwt.secret = ENV['DEVISE_JWT_SECRET_KEY']
+    jwt.dispatch_requests = [
+      ['POST', %r{^/api/users/sign_in$}]
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/api/v1/sign_out$}]
+    ]
+    jwt.request_formats = { api_user: [nil, :json], admin: [] }
+    jwt.expiration_time = 1.day.to_i
+  end
 end

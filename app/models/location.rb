@@ -4,7 +4,7 @@ class Location < ActiveRecord::Base
                   :longitude, :name, :short_desc, :transportation, :website,
                   :virtual, :address_attributes, :mail_address_attributes,
                   :phones_attributes, :regular_schedules_attributes,
-                  :holiday_schedules_attributes
+                  :holiday_schedules_attributes, :is_primary
 
   belongs_to :organization
 
@@ -16,17 +16,17 @@ class Location < ActiveRecord::Base
   has_one :mail_address, dependent: :destroy
   accepts_nested_attributes_for :mail_address, allow_destroy: true
 
-  has_many :phones, dependent: :destroy
+  has_many :phones, dependent: :destroy, before_add: :assign_association
   accepts_nested_attributes_for :phones,
                                 allow_destroy: true, reject_if: :all_blank
 
   has_many :services, dependent: :destroy
 
-  has_many :regular_schedules, dependent: :destroy
+  has_many :regular_schedules, dependent: :destroy, before_add: :assign_association
   accepts_nested_attributes_for :regular_schedules,
                                 allow_destroy: true, reject_if: :all_blank
 
-  has_many :holiday_schedules, dependent: :destroy
+  has_many :holiday_schedules, dependent: :destroy, before_add: :assign_association
   accepts_nested_attributes_for :holiday_schedules,
                                 allow_destroy: true, reject_if: :all_blank
 
@@ -60,7 +60,6 @@ class Location < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
 
   after_validation :geocode, if: :needs_geocoding?
-
   geocoded_by :full_physical_address
 
   extend Enumerize
@@ -92,6 +91,10 @@ class Location < ActiveRecord::Base
       %i[name address_street],
       %i[name mail_address_city]
     ]
+  end
+
+  def assign_association(object)
+    object.location = self
   end
 
   def address_street

@@ -1,7 +1,6 @@
 Geocoder.configure(
   timeout: 30,
-  lookup: :google,
-  api_key: ENV['GOOGLE_GEOCODER_API_KEY'],
+  lookup: :geocoder_ca,
   use_https: true,
   always_raise: [
     Geocoder::OverQueryLimitError,
@@ -9,5 +8,4 @@ Geocoder.configure(
     Geocoder::InvalidRequest,
     Geocoder::InvalidApiKey
   ]
-
 )

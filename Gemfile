@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.3.3'
 gem 'active_model_serializers', '~> 0.8.0'
+gem 'acts-as-taggable-on', '~> 5.0'
 gem 'ancestry'
 gem 'auto_strip_attributes', '~> 2.0'
 gem 'bootstrap-sass', '~> 3.3.0'
@@ -13,7 +14,7 @@ gem 'dotenv-rails'
 gem 'enumerize'
 gem 'figaro', '~> 1.0'
 gem 'friendly_id', '~> 5.0'
-gem 'geocoder'
+gem 'geocoder', '~> 1.5.1'
 gem 'haml-rails'
 gem 'jquery-rails', '~> 4.0'
 gem 'kaminari'
@@ -31,9 +32,14 @@ gem 'rails', '~> 4.2'
 gem 'rubyzip'
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '~> 3.5'
-gem 'sucker_punch'
 gem 'smarter_csv'
+gem 'sucker_punch'
 gem 'uglifier', '>= 1.3.0'
+gem 'devise-jwt', '~> 0.5.8'
+gem 'carrierwave' #for uploading blog images
+gem 'fog-aws' #for uploading images
+gem 'connection_pool' #for making puma play nicely wth memcachier
+gem 'sendgrid-ruby' #for sending emails
 
 group :production do
   # Heroku recommended
@@ -42,10 +48,10 @@ end
 
 group :test, :development do
   gem 'bullet'
+  gem 'byebug'
   gem 'factory_girl_rails', '>= 4.2.0'
   gem 'rspec-its'
   gem 'rspec-rails', '~> 3.1'
-  gem 'byebug'
 end
 
 group :test do
@@ -65,6 +71,7 @@ group :development do
   gem 'binding_of_caller', '>= 0.7.1', platforms: %i[mri_19 rbx]
   gem 'bummr'
   gem 'derailed'
+  gem 'faker'
   gem 'flamegraph'
   gem 'letter_opener'
   gem 'quiet_assets', '>= 1.0.2'

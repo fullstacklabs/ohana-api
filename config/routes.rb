@@ -7,7 +7,8 @@ Rails.application.routes.draw do
   # See how all your routes lay out with 'rake routes'.
   # Read more about routing: http://guides.rubyonrails.org/routing.html
 
-  devise_for :users, controllers: { registrations: 'user/registrations' }
+  devise_for :users, skip: [:registrations, :sessions], controllers: { passwords: "passwords" }
+
   devise_for(
     :admins, path: ENV['ADMIN_PATH'] || '/', controllers: { registrations: 'admin/registrations' }
   )
@@ -23,11 +24,16 @@ Rails.application.routes.draw do
         resources :contacts, except: %i[show index]
       end
 
-      resources :organizations, except: :show do
+      resources :organizations do
         resources :contacts, except: %i[show index], controller: 'organization_contacts'
       end
       resources :programs, except: :show
       resources :services, only: :index
+      resources :events do
+        put 'featured', on: :member
+      end
+      resources :blog_posts
+      put 'blog_post_categories', to: 'blog_post_categories#update'
 
       namespace :csv do
         get 'addresses'
@@ -57,53 +63,72 @@ Rails.application.routes.draw do
   resources :api_applications, except: :show
   get 'api_applications/:id' => 'api_applications#edit'
 
-  constraints(SubdomainConstraints.new(subdomain: ENV['API_SUBDOMAIN'])) do
-    namespace :api, path: ENV['API_PATH'], defaults: { format: 'json' } do
-      scope module: :v1, constraints: ApiConstraints.new(version: 1) do
-        get '/' => 'root#index'
-        get '.well-known/status' => 'status#check_status'
+  namespace :api, path: ENV['API_PATH'], defaults: { format: 'json' } do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1) do
+      get '/' => 'root#index'
+      get '.well-known/status' => 'status#check_status'
 
-        resources :organizations do
-          resources :locations, only: :create
+      devise_for :users, controllers: {
+        sessions: 'api/v1/sessions',
+        registrations: 'api/v1/registrations'
+      }
 
-          collection do
-            get :search
-          end
-        end
-        get 'organizations/:organization_id/locations',
-            to: 'organizations#locations', as: :org_locations
-
-        resources :locations do
-          resources :address, except: %i[index show]
-          resources :mail_address, except: %i[index show]
-          resources :contacts, except: [:show] do
-            resources :phones,
-                      except: %i[show index],
-                      path: '/phones', controller: 'contact_phones'
-          end
-          resources :phones, except: [:show], path: '/phones', controller: 'location_phones'
-          resources :services
-        end
-
-        resources :search, only: :index
-
-        resources :categories, only: :index do
-          collection do
-            get :search
-          end
-        end
-
-        put 'services/:service_id/categories',
-            to: 'services#update_categories', as: :service_categories
-        get 'categories/:taxonomy_id/children', to: 'categories#children', as: :category_children
-        get 'locations/:location_id/nearby', to: 'search#nearby', as: :location_nearby
-
-        match '*unmatched_route' => 'errors#raise_not_found!',
-              via: %i[get delete patch post put]
-
-        # CORS support
-        match '*unmatched_route' => 'cors#render_204', via: [:options]
+      devise_scope :user do
+        get '/users', to: 'registrations#show'
       end
+
+      resources :organizations, except: %i[create] do
+        resources :locations, only: :create
+
+        collection do
+          get :search
+        end
+      end
+      get 'organizations/:organization_id/locations', to: 'organizations#locations', as: :org_locations
+
+      resources :locations do
+        resources :address, except: %i[index show]
+        resources :mail_address, except: %i[index show]
+        resources :contacts, except: [:show] do
+          resources :phones,
+          except: %i[show index],
+          path: '/phones', controller: 'contact_phones'
+        end
+        resources :phones,
+                  except: [:show],
+                  path: '/phones',
+                  controller: 'location_phones'
+        resources :services
+      end
+
+      resources :search, only: :index
+
+      resources :categories, only: :index do
+        collection do
+          get :search
+        end
+      end
+
+      resources :events, except: %i[new edit]
+      resources :blog_posts, except: %i[new edit] do
+        collection do
+          get :categories
+        end
+      end
+
+      resources :blog_post_images
+      resources :org_profile_images
+
+      put 'services/:service_id/categories',
+      to: 'services#update_categories', as: :service_categories
+      get 'categories/:taxonomy_id/children', to: 'categories#children', as: :category_children
+      get 'locations/:location_id/nearby', to: 'search#nearby', as: :location_nearby
+
+      match '*unmatched_route' => 'errors#raise_not_found!',
+            via: %i[get delete patch post put]
+
+      # CORS support
+      match '*unmatched_route' => 'cors#render_204', via: [:options]
     end
   end
 
